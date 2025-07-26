@@ -88,19 +88,28 @@
         return;
       }
 
-      // Username bandligini tekshir
       const existing = JSON.parse(localStorage.getItem("onkit_user"));
       if (existing && existing.username === username) {
         alert("Bu username allaqachon band! Iltimos, boshqasini tanlang.");
         return;
       }
 
-      // Ma’lumotlarni saqlash
-      const userData = { email, phone, username, birthyear, gender };
-      localStorage.setItem("onkit_user", JSON.stringify(userData));
-      alert("Ro‘yxatdan o‘tish muvaffaqiyatli!");
-      window.location.href = "login.html";
+      const user = {
+        email,
+        phone,
+        username,
+        birthyear,
+        gender,
+        name: "",  // Keyinchalik to‘ldiriladi
+        bio: ""    // Profilda yoziladi
+      };
+
+      localStorage.setItem("onkit_user", JSON.stringify(user));
+      localStorage.setItem("onkit_logged_in", "true");
+
+      alert("Ro‘yxatdan muvaffaqiyatli o‘tdingiz!");
+      window.location.href = "dashboard.html";
     });
   </script>
 </body>
-</html> 
+</html>
