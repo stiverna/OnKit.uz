@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tizimga kirish - OnKit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #eef7ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #2980b9;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2471a3;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Tizimga kirish</h2>
+    <form id="loginForm">
+      <input type="email" name="email" placeholder="Email manzilingiz" required>
+      <input type="tel" name="phone" placeholder="Telefon raqamingiz" required>
+      <input type="text" name="username" placeholder="Foydalanuvchi nomi (username)" required>
+      <button type="submit">Davom etish</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = form.email.value.trim();
+      const phone = form.phone.value.trim();
+      const username = form.username.value.trim();
+
+      const user = JSON.parse(localStorage.getItem("onkit_user"));
+
+      if (!user) {
+        alert("Hech qanday foydalanuvchi ro‘yxatdan o‘tmagan!");
+        return;
+      }
+
+      if (user.email === email && user.phone === phone && user.username === username) {
+        localStorage.setItem("onkit_logged_in", "true");
+        alert("Xush kelibsiz, " + username + "!");
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Ma’lumotlar noto‘g‘ri kiritilgan!");
+      }
+    });
+  </script>
+</body>
+</html>
