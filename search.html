@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kitob Qidiruv – OnKit</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f9ff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .search-box {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .results {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .book-card {
+      width: 200px;
+      background: white;
+      border-radius: 8px;
+      margin: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .book-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .book-card h4 {
+      font-size: 16px;
+      color: #2c3e50;
+    }
+
+    .book-card p {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h2>📚 Kitob Qidiruv</h2>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Kitob nomini yozing...">
+    <button onclick="searchBooks()">Qidirish</button>
+  </div>
+  <div class="results" id="results"></div>
+
+  <script src="search.js"></script>
+</body>
+</html>
