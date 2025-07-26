@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ro'yxatdan o'tish - OnKit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f9ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, select {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #219150;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Ro'yxatdan o'tish</h2>
+    <form id="registerForm">
+      <input type="email" name="email" placeholder="Email manzilingiz" required>
+      <input type="tel" name="phone" placeholder="Telefon raqamingiz" required>
+      <input type="text" name="username" placeholder="Foydalanuvchi nomi (username)" required>
+      <input type="number" name="birthyear" placeholder="Tug‘ilgan yilingiz" required min="1900" max="2025">
+      <select name="gender" required>
+        <option value="">Jinsni tanlang</option>
+        <option value="male">Erkak</option>
+        <option value="female">Ayol</option>
+        <option value="other">Aniq emas</option>
+      </select>
+      <button type="submit">Davom etish</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("registerForm");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = form.email.value.trim();
+      const phone = form.phone.value.trim();
+      const username = form.username.value.trim();
+      const birthyear = parseInt(form.birthyear.value);
+      const gender = form.gender.value;
+
+      const currentYear = new Date().getFullYear();
+      const age = currentYear - birthyear;
+
+      if (age < 14) {
+        alert("14 yoshdan kichiklar ro‘yxatdan o‘tolmaydi!");
+        return;
+      }
+
+      // Username bandligini tekshir
+      const existing = JSON.parse(localStorage.getItem("onkit_user"));
+      if (existing && existing.username === username) {
+        alert("Bu username allaqachon band! Iltimos, boshqasini tanlang.");
+        return;
+      }
+
+      // Ma’lumotlarni saqlash
+      const userData = { email, phone, username, birthyear, gender };
+      localStorage.setItem("onkit_user", JSON.stringify(userData));
+      alert("Ro‘yxatdan o‘tish muvaffaqiyatli!");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html> 
