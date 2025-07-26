@@ -1,0 +1,44 @@
+# Node.js modullari
+node_modules/
+
+# Maxfiy fayllar
+.env
+*.env
+
+# Log fayllar
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sistemaning va IDE’ning vaqtinchalik fayllari
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Git fayllari
+.ssh/
+*.pem
+*.key
+
+# Build yoki dist katalogi (agar ishlatilsa)
+dist/
+build/
+
+# Yuklangan fayllar
+*.zip
+*.rar
+*.7z
+
+# Chrome profilini saqlashdan saqlaning (agar testing qilinsa)
+chrome-profile/
+
+# Profil rasmlar (upload qilingan)
+uploads/
+*.jpg
+*.png
+
+# LocalStorage’ga tegishli JSON (agar eksport qilinsa)
+local_storage.json
