@@ -5,6 +5,7 @@
   <title>OnKit – Ishchi oyna</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
+  <script src="lang.js" defer></script>
 </head>
 <body>
   <header>
@@ -13,18 +14,18 @@
     <div class="menu" id="menu">
       <a href="#" onclick="setDarkMode()">🌙 Dark</a>
       <a href="#" onclick="setLightMode()">☀️ Light</a>
-      <a href="#" onclick="openModal()">👤 Profil</a>
-      <a href="#" onclick="logout()">🚪 Log out</a>
-      <a href="search.html">🔍 Qidiruv</a>
-      <a href="#">🌐 Language</a>
-      <a href="#" onclick="copyInvite()">👥 Do‘stlarni taklif qilish</a>
+      <a href="#" onclick="openModal()">👤 <span id="profileText">Profil</span></a>
+      <a href="#" id="logoutBtn" onclick="logout()">🚪 Log out</a>
+      <a href="search.html" id="searchBtn">🔍 Qidiruv</a>
+      <a href="#" onclick="chooseLanguage()">🌐 Language</a>
+      <a href="#" id="inviteBtn" onclick="copyInvite()">👥 Do‘stlarni taklif qilish</a>
     </div>
   </header>
 
-  <h3>Assalomu alaykum, <span id="username">Foydalanuvchi</span>!</h3>
+  <h3><span id="welcome">Assalomu alaykum,</span> <span id="username">Foydalanuvchi</span>!</h3>
 
   <div class="section">
-    <h4>Tavsiya etilgan kitoblar</h4>
+    <h4 id="books">Tavsiya etilgan kitoblar</h4>
     <div class="book-card">
       <img src="https://via.placeholder.com/150x140" alt="Kitob rasmi">
       <p>O‘tkan kunlar</p>
@@ -43,19 +44,18 @@
   <div id="profileModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
-      <h2>👤 Profilingiz</h2>
+      <h2>👤 <span id="profileTitle">Profilingiz</span></h2>
       <div class="profile-image">
         <img id="preview" src="https://via.placeholder.com/150" alt="Profil rasmi">
         <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
       </div>
       <input type="text" placeholder="Ismingiz" id="nameInput"><br>
       <textarea placeholder="Bio..." id="bioInput"></textarea><br>
-      <button onclick="saveProfile()">💾 Saqlash</button>
+      <button id="saveBtn" onclick="saveProfile()">💾 Saqlash</button>
     </div>
   </div>
 
   <script>
-    // Foydalanuvchi tekshiruvi
     const user = JSON.parse(localStorage.getItem("onkit_user"));
     const logged = localStorage.getItem("onkit_logged_in");
 
@@ -66,7 +66,6 @@
       document.getElementById("username").textContent = user.username;
     }
 
-    // Dark / Light mode
     function setDarkMode() {
       document.body.classList.add("dark-mode");
     }
@@ -80,7 +79,6 @@
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
 
-    // Profil Modal
     function openModal() {
       document.getElementById("nameInput").value = user.name || "";
       document.getElementById("bioInput").value = user.bio || "";
@@ -118,7 +116,15 @@
       alert("Taklif linki nusxalandi!");
     }
 
-    // Modal tashqarisiga bosilganda yopilsin
+    function chooseLanguage() {
+      const lang = prompt("Tilni tanlang: uz yoki en").toLowerCase();
+      if (lang === "uz" || lang === "en") {
+        setLanguage(lang);
+      } else {
+        alert("Faqat 'uz' yoki 'en' kiriting.");
+      }
+    }
+
     window.onclick = function (e) {
       if (e.target == document.getElementById("profileModal")) {
         closeModal();
