@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kitob Qidiruv – OnKit</title>
 
-  <!-- Stil -->
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -58,6 +57,13 @@
       padding: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .book-card.selected {
+      border-color: #2ecc71;
+      background-color: #e6f9ee;
     }
 
     .book-card img {
@@ -76,21 +82,26 @@
       font-size: 14px;
       color: #555;
     }
+
+    #downloadBtn {
+      display: none;
+      margin: 20px auto;
+      display: block;
+    }
   </style>
 
-  <!-- Kutubxonani ulaymiz -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
   <h2>📚 Kitob Qidiruv</h2>
-  
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Kitob nomini yozing...">
     <button onclick="searchBooks()">Qidirish</button>
-    <button onclick="downloadPDF()">📄 Yuklab olish (PDF)</button>
   </div>
-  
+
   <div class="results" id="results"></div>
+
+  <button id="downloadBtn" onclick="downloadSelectedBooks()">📄 Tanlanganlarni PDF tarzda yuklab olish</button>
 </body>
 </html>
