@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kitob Qidiruv – OnKit</title>
+
+  <!-- Stil -->
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -74,30 +76,21 @@
       font-size: 14px;
       color: #555;
     }
-
-    /* 🔹 Qidiruv tarixi elementlari uchun */
-    .results p {
-      font-size: 16px;
-      margin: 6px;
-      color: #2980b9;
-      cursor: pointer;
-    }
-
-    .results h3 {
-      width: 100%;
-      text-align: center;
-      color: #444;
-    }
   </style>
+
+  <!-- Kutubxonani ulaymiz -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+  <script src="search.js" defer></script>
 </head>
 <body>
   <h2>📚 Kitob Qidiruv</h2>
+  
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Kitob nomini yozing...">
     <button onclick="searchBooks()">Qidirish</button>
+    <button onclick="downloadPDF()">📄 Yuklab olish (PDF)</button>
   </div>
+  
   <div class="results" id="results"></div>
-
-  <script src="search.js"></script>
 </body>
 </html>
