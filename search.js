@@ -7,11 +7,7 @@ async function searchBooks() {
     return;
   }
 
-  // ⏳ Ekranga yuklanmoqda deb yozamiz
   resultsDiv.innerHTML = "⏳ Qidirilmoqda...";
-
-  // 🔸 Qidiruv tarixiga saqlash
-  saveSearchHistory(query);
 
   try {
     const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`);
@@ -42,43 +38,24 @@ async function searchBooks() {
       resultsDiv.innerHTML += card;
     });
   } catch (error) {
-    resultsDiv.innerHTML = "⚠️ Xatolik yuz berdi. Internet aloqasini tekshiring.";
+    resultsDiv.innerHTML = "❌ Tarmoqda xatolik yuz berdi.";
   }
 }
 
-// 📝 Tarixga yozish
-function saveSearchHistory(query) {
-  let history = JSON.parse(localStorage.getItem("search_history")) || [];
-  history.unshift(query); // yangisini boshiga qo‘shamiz
-  history = [...new Set(history)].slice(0, 5); // unikal va 5tadan oshmasin
-  localStorage.setItem("search_history", JSON.stringify(history));
-}
-
-// 📋 Tarixni chiqarish
-function showSearchHistory() {
-  const history = JSON.parse(localStorage.getItem("search_history")) || [];
-  const resultsDiv = document.getElementById("results");
-
-  if (history.length === 0) {
-    resultsDiv.innerHTML = "🔍 Hali qidiruvlar mavjud emas.";
+function downloadPDF() {
+  const results = document.getElementById("results");
+  if (results.innerHTML.trim() === "") {
+    alert("Avval qidiruv amalga oshiring!");
     return;
   }
 
-  resultsDiv.innerHTML = "<h3>🕓 Oxirgi qidiruvlar:</h3>";
-  history.forEach(item => {
-    const el = document.createElement("p");
-    el.textContent = "🔸 " + item;
-    el.style.cursor = "pointer";
-    el.style.color = "#2980b9";
-    el.onclick = () => {
-      document.getElementById("searchInput").value = item;
-      searchBooks();
-    };
-    resultsDiv.appendChild(el);
-  });
-}
+  const options = {
+    margin: 0.5,
+    filename: 'onkit-qidiruv-natijalari.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
 
-// Sahifa yuklanganda ko‘rsatish
-window.onload = () => {
-  showSearchHistory();
-};
+  html2pdf().set(options).from(results).save();
+}
