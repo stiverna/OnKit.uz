@@ -2,25 +2,29 @@ function searchBooks() {
   const query = document.getElementById("searchInput").value.trim();
   const resultsDiv = document.getElementById("results");
   const downloadBtn = document.getElementById("downloadBtn");
+  const loader = document.getElementById("loader");
 
   if (!query) {
     alert("Iltimos, kitob nomini kiriting.");
     return;
   }
 
-  resultsDiv.innerHTML = "⏳ Qidirilmoqda...";
-  downloadBtn.style.display = "none"; // har safar qaytadan boshlanadi
+  resultsDiv.innerHTML = "";
+  loader.style.display = "block";
+  downloadBtn.style.display = "none";
 
   fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
     .then(data => {
+      loader.style.display = "none";
+
       if (!data.docs || data.docs.length === 0) {
         resultsDiv.innerHTML = "❌ Kitob topilmadi.";
         return;
       }
 
       resultsDiv.innerHTML = "";
-      data.docs.slice(0, 10).forEach((book, index) => {
+      data.docs.slice(0, 10).forEach(book => {
         const title = book.title || "Nomsiz";
         const author = book.author_name ? book.author_name.join(", ") : "Muallif yo‘q";
         const coverId = book.cover_i;
@@ -32,6 +36,7 @@ function searchBooks() {
         card.className = "book-card";
         card.setAttribute("data-title", title);
         card.setAttribute("data-author", author);
+        card.setAttribute("data-cover", coverUrl);
 
         card.innerHTML = `
           <img src="${coverUrl}" alt="Kitob rasmi">
@@ -39,11 +44,8 @@ function searchBooks() {
           <p>${author}</p>
         `;
 
-        // Tanlash uchun bosiladi
         card.onclick = function () {
           card.classList.toggle("selected");
-
-          // Kamida 1 ta tanlov bo‘lsa, yuklash tugmasini ko‘rsat
           const selected = document.querySelectorAll(".book-card.selected");
           downloadBtn.style.display = selected.length > 0 ? "block" : "none";
         };
@@ -52,8 +54,19 @@ function searchBooks() {
       });
     })
     .catch(() => {
+      loader.style.display = "none";
       resultsDiv.innerHTML = "❌ Qidiruvda xatolik yuz berdi.";
     });
+}
+
+function searchInArchive() {
+  const query = document.getElementById("searchInput").value.trim();
+  if (!query) {
+    alert("Iltimos, kitob nomini yozing.");
+    return;
+  }
+  const url = `https://archive.org/details/texts?query=${encodeURIComponent(query)}`;
+  window.open(url, "_blank");
 }
 
 function downloadSelectedBooks() {
@@ -69,10 +82,15 @@ function downloadSelectedBooks() {
   selectedCards.forEach(card => {
     const title = card.getAttribute("data-title");
     const author = card.getAttribute("data-author");
+    const cover = card.getAttribute("data-cover");
 
     const block = document.createElement("div");
-    block.style.marginBottom = "20px";
-    block.innerHTML = `<strong>${title}</strong><br><em>${author}</em>`;
+    block.style.marginBottom = "30px";
+
+    block.innerHTML = `
+      <img src="${cover}" width="100" style="margin-bottom: 10px;"><br>
+      <strong>${title}</strong><br><em>${author}</em>
+    `;
     content.appendChild(block);
   });
 
