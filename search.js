@@ -2,29 +2,26 @@ function searchBooks() {
   const query = document.getElementById("searchInput").value.trim();
   const resultsDiv = document.getElementById("results");
   const downloadBtn = document.getElementById("downloadBtn");
-  const loader = document.getElementById("loader");
 
   if (!query) {
     alert("Iltimos, kitob nomini kiriting.");
     return;
   }
 
-  resultsDiv.innerHTML = "";
-  loader.style.display = "block";
+  resultsDiv.innerHTML = "⏳ Qidirilmoqda...";
   downloadBtn.style.display = "none";
+  document.getElementById("archiveSection").style.display = "none";
 
   fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
     .then(data => {
-      loader.style.display = "none";
-
       if (!data.docs || data.docs.length === 0) {
         resultsDiv.innerHTML = "❌ Kitob topilmadi.";
         return;
       }
 
       resultsDiv.innerHTML = "";
-      data.docs.slice(0, 10).forEach(book => {
+      data.docs.slice(0, 10).forEach((book) => {
         const title = book.title || "Nomsiz";
         const author = book.author_name ? book.author_name.join(", ") : "Muallif yo‘q";
         const coverId = book.cover_i;
@@ -36,7 +33,6 @@ function searchBooks() {
         card.className = "book-card";
         card.setAttribute("data-title", title);
         card.setAttribute("data-author", author);
-        card.setAttribute("data-cover", coverUrl);
 
         card.innerHTML = `
           <img src="${coverUrl}" alt="Kitob rasmi">
@@ -54,19 +50,8 @@ function searchBooks() {
       });
     })
     .catch(() => {
-      loader.style.display = "none";
       resultsDiv.innerHTML = "❌ Qidiruvda xatolik yuz berdi.";
     });
-}
-
-function searchInArchive() {
-  const query = document.getElementById("searchInput").value.trim();
-  if (!query) {
-    alert("Iltimos, kitob nomini yozing.");
-    return;
-  }
-  const url = `https://archive.org/details/texts?query=${encodeURIComponent(query)}`;
-  window.open(url, "_blank");
 }
 
 function downloadSelectedBooks() {
@@ -82,15 +67,10 @@ function downloadSelectedBooks() {
   selectedCards.forEach(card => {
     const title = card.getAttribute("data-title");
     const author = card.getAttribute("data-author");
-    const cover = card.getAttribute("data-cover");
 
     const block = document.createElement("div");
-    block.style.marginBottom = "30px";
-
-    block.innerHTML = `
-      <img src="${cover}" width="100" style="margin-bottom: 10px;"><br>
-      <strong>${title}</strong><br><em>${author}</em>
-    `;
+    block.style.marginBottom = "20px";
+    block.innerHTML = `<strong>${title}</strong><br><em>${author}</em>`;
     content.appendChild(block);
   });
 
@@ -103,4 +83,19 @@ function downloadSelectedBooks() {
   };
 
   html2pdf().set(options).from(content).save();
+}
+
+function searchInArchive() {
+  const query = document.getElementById("searchInput").value.trim();
+  if (!query) {
+    alert("Iltimos, kitob nomini yozing.");
+    return;
+  }
+
+  const archiveFrame = document.getElementById("archiveFrame");
+  const archiveSection = document.getElementById("archiveSection");
+
+  archiveFrame.src = `https://archive.org/details/texts?query=${encodeURIComponent(query)}`;
+  archiveSection.style.display = "block";
+  archiveFrame.scrollIntoView({ behavior: "smooth" });
 }
