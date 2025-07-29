@@ -31,9 +31,13 @@
       border: 1px solid #ccc;
     }
 
-    button {
+    .btn-group {
+      margin-top: 15px;
+    }
+
+    .btn-group button {
       padding: 10px 20px;
-      margin: 10px 5px;
+      margin: 0 5px;
       background-color: #27ae60;
       color: white;
       border: none;
@@ -108,8 +112,10 @@
   <h2>📚 Kitob Qidiruv</h2>
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Kitob nomini yozing...">
-    <button onclick="searchBooks()">Qidirish</button>
-    <button onclick="searchInArchive()">📦 Archive.org dan izlash</button>
+    <div class="btn-group">
+      <button onclick="searchBooks()">🔍 OpenLibrary orqali qidirish</button>
+      <button onclick="searchInArchive()">🗄 Archive.org orqali qidirish</button>
+    </div>
   </div>
 
   <div class="results" id="results"></div>
