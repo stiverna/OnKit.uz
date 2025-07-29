@@ -92,6 +92,18 @@
       display: block;
     }
 
+    .close-btn {
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 20px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     #archiveSection {
       display: none;
       margin-top: 40px;
@@ -120,11 +132,12 @@
 
   <div class="results" id="results"></div>
   <button id="downloadBtn" onclick="downloadSelectedBooks()">📄 Tanlanganlarni PDF tarzda yuklab olish</button>
+  <button id="closeResultsBtn" class="close-btn" style="display:none" onclick="closeOpenLibraryResults()">❌ OpenLibrary natijalarini yopish</button>
 
-  <!-- Archive natijalari -->
   <div id="archiveSection">
     <h3>🗄 Archive.org natijalari</h3>
     <iframe id="archiveFrame" src=""></iframe>
+    <button class="close-btn" onclick="closeArchive()">❌ Archive.org natijalarini yopish</button>
   </div>
 </body>
 </html>
