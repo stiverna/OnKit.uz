@@ -34,7 +34,7 @@
 
     button {
       padding: 10px 20px;
-      margin-left: 10px;
+      margin: 10px;
       background-color: #27ae60;
       color: white;
       border: none;
@@ -86,7 +86,22 @@
     #downloadBtn {
       display: none;
       margin: 20px auto;
-      display: block;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 
@@ -98,8 +113,10 @@
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Kitob nomini yozing...">
     <button onclick="searchBooks()">Qidirish</button>
+    <button onclick="searchInArchive()">Archive.org dan izlash</button>
   </div>
 
+  <div class="loader" id="loader"></div>
   <div class="results" id="results"></div>
 
   <button id="downloadBtn" onclick="downloadSelectedBooks()">📄 Tanlanganlarni PDF tarzda yuklab olish</button>
