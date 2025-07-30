@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitob Tafsiloti – OnKit</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f9ff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .book-details {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .book-details img {
+      max-width: 200px;
+      border-radius: 10px;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .info h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .info p {
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .buttons a {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px 10px 0 0;
+      background-color: #27ae60;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    .buttons a.secondary {
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📖 Kitob Tafsilotlari</h2>
+    <div class="book-details">
+      <img id="cover" src="https://via.placeholder.com/200x300?text=No+Cover" alt="Kitob rasmi">
+      <div class="info">
+        <h3 id="title">Kitob nomi</h3>
+        <p><strong>Muallif:</strong> <span id="author">No author</span></p>
+        <p><strong>Yil:</strong> <span id="year">-</span></p>
+        <p><strong>Tavsif:</strong> <span id="desc">Ma’lumot yo‘q</span></p>
+
+        <div class="buttons">
+          <a href="#" id="readLink" target="_blank">📖 O‘qish</a>
+          <a href="#" id="downloadLink" class="secondary" target="_blank">⬇ Yuklab olish</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // URL orqali uzatilgan query paramslarni olish
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get("title");
+    const author = params.get("author");
+    const year = params.get("year") || "-";
+    const coverId = params.get("cover");
+    const olid = params.get("olid"); // OpenLibrary ID
+
+    // Ma'lumotlarni joylashtirish
+    document.getElementById("title").textContent = title || "Noma'lum";
+    document.getElementById("author").textContent = author || "Noma’lum";
+    document.getElementById("year").textContent = year;
+
+    if (coverId) {
+      document.getElementById("cover").src = `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;
+    }
+
+    // O‘qish va Yuklab olish havolalari
+    if (olid) {
+      document.getElementById("readLink").href = `https://openlibrary.org/books/${olid}`;
+      document.getElementById("downloadLink").href = `https://openlibrary.org/books/${olid}.pdf`;
+    } else {
+      document.getElementById("readLink").style.display = "none";
+      document.getElementById("downloadLink").style.display = "none";
+    }
+  </script>
+</body>
+</html>
