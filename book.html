@@ -2,12 +2,12 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kitob Tafsiloti – OnKit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitob Tafsilotlari – OnKit</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f9ff;
+      font-family: sans-serif;
+      background: #f9fcff;
       margin: 0;
       padding: 20px;
     }
@@ -16,106 +16,80 @@
       max-width: 800px;
       margin: auto;
       background: white;
-      border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .book-cover {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 20px;
     }
 
     h2 {
-      text-align: center;
-      color: #2c3e50;
-    }
-
-    .book-details {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      align-items: flex-start;
-    }
-
-    .book-details img {
-      max-width: 200px;
-      border-radius: 10px;
+      margin-bottom: 10px;
     }
 
     .info {
-      flex: 1;
-    }
-
-    .info h3 {
-      margin-top: 0;
-      color: #2c3e50;
-    }
-
-    .info p {
+      font-size: 16px;
       margin-bottom: 10px;
-      color: #555;
     }
 
-    .buttons {
-      margin-top: 20px;
-    }
-
-    .buttons a {
+    .back {
       display: inline-block;
-      padding: 10px 20px;
-      margin: 5px 10px 0 0;
-      background-color: #27ae60;
+      margin-top: 20px;
+      background: #3498db;
       color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
       text-decoration: none;
-      border-radius: 8px;
     }
 
-    .buttons a.secondary {
-      background-color: #3498db;
+    .download-link {
+      margin-top: 20px;
+      display: inline-block;
+      background: #2ecc71;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>📖 Kitob Tafsilotlari</h2>
-    <div class="book-details">
-      <img id="cover" src="https://via.placeholder.com/200x300?text=No+Cover" alt="Kitob rasmi">
-      <div class="info">
-        <h3 id="title">Kitob nomi</h3>
-        <p><strong>Muallif:</strong> <span id="author">No author</span></p>
-        <p><strong>Yil:</strong> <span id="year">-</span></p>
-        <p><strong>Tavsif:</strong> <span id="desc">Ma’lumot yo‘q</span></p>
-
-        <div class="buttons">
-          <a href="#" id="readLink" target="_blank">📖 O‘qish</a>
-          <a href="#" id="downloadLink" class="secondary" target="_blank">⬇ Yuklab olish</a>
-        </div>
-      </div>
-    </div>
+    <img id="cover" class="book-cover" src="" alt="Kitob rasmi">
+    <h2 id="title">Kitob nomi</h2>
+    <p class="info"><strong>Muallif:</strong> <span id="author"></span></p>
+    <p class="info"><strong>Nashr yili:</strong> <span id="year"></span></p>
+    <a class="download-link" id="downloadLink" href="#" target="_blank">📄 Yuklab olish (OpenLibrary)</a>
+    <br>
+    <a href="search.html" class="back">⬅️ Ortga qaytish</a>
   </div>
 
   <script>
-    // URL orqali uzatilgan query paramslarni olish
     const params = new URLSearchParams(window.location.search);
-    const title = params.get("title");
-    const author = params.get("author");
-    const year = params.get("year") || "-";
+    const title = params.get("title") || "Noma'lum";
+    const author = params.get("author") || "Noma'lum";
+    const year = params.get("year") || "Noma'lum";
     const coverId = params.get("cover");
-    const olid = params.get("olid"); // OpenLibrary ID
+    const olid = params.get("olid");
 
-    // Ma'lumotlarni joylashtirish
-    document.getElementById("title").textContent = title || "Noma'lum";
-    document.getElementById("author").textContent = author || "Noma’lum";
+    document.getElementById("title").textContent = title;
+    document.getElementById("author").textContent = author;
     document.getElementById("year").textContent = year;
 
-    if (coverId) {
-      document.getElementById("cover").src = `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;
-    }
+    const cover = coverId
+      ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`
+      : "https://via.placeholder.com/200x250?text=No+Cover";
+    document.getElementById("cover").src = cover;
 
-    // O‘qish va Yuklab olish havolalari
-    if (olid) {
-      document.getElementById("readLink").href = `https://openlibrary.org/books/${olid}`;
-      document.getElementById("downloadLink").href = `https://openlibrary.org/books/${olid}.pdf`;
-    } else {
-      document.getElementById("readLink").style.display = "none";
-      document.getElementById("downloadLink").style.display = "none";
-    }
+    const downloadLink = olid
+      ? `https://openlibrary.org/books/${olid}`
+      : "https://openlibrary.org/";
+    document.getElementById("downloadLink").href = downloadLink;
   </script>
 </body>
 </html>
