@@ -60,13 +60,6 @@
       padding: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
-      cursor: pointer;
-      border: 2px solid transparent;
-    }
-
-    .book-card.selected {
-      border-color: #2ecc71;
-      background-color: #e6f9ee;
     }
 
     .book-card img {
@@ -86,16 +79,19 @@
       color: #555;
     }
 
-    #downloadBtn {
-      display: none;
-      margin: 20px auto;
-      display: block;
+    .download-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #3498db;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
     }
 
     .close-btn {
       display: block;
-      margin: 0 auto;
-      margin-bottom: 20px;
+      margin: 20px auto;
       background-color: #e74c3c;
       color: white;
       border: none;
@@ -103,41 +99,25 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
-    #archiveSection {
-      display: none;
-      margin-top: 40px;
-    }
-
-    #archiveFrame {
-      width: 100%;
-      height: 600px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
   </style>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
   <h2>📚 Kitob Qidiruv</h2>
+
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Kitob nomini yozing...">
     <div class="btn-group">
       <button onclick="searchBooks()">🔍 OpenLibrary orqali qidirish</button>
-      <button onclick="searchInArchive()">🗄 Archive.org orqali qidirish</button>
+      <button onclick="searchArchiveBooks()">🗄 Archive.org orqali qidirish</button>
     </div>
   </div>
 
   <div class="results" id="results"></div>
-  <button id="downloadBtn" onclick="downloadSelectedBooks()">📄 Tanlanganlarni PDF tarzda yuklab olish</button>
-  <button id="closeResultsBtn" class="close-btn" style="display:none" onclick="closeOpenLibraryResults()">❌ OpenLibrary natijalarini yopish</button>
+  <button class="close-btn" id="closeResultsBtn" onclick="closeOpenLibraryResults()" style="display:none">❌ OpenLibrary natijalarini yopish</button>
 
-  <div id="archiveSection">
-    <h3>🗄 Archive.org natijalari</h3>
-    <iframe id="archiveFrame" src=""></iframe>
-    <button class="close-btn" onclick="closeArchive()">❌ Archive.org natijalarini yopish</button>
-  </div>
+  <div class="results" id="archiveResults"></div>
+  <button class="close-btn" id="closeArchiveBtn" onclick="closeArchiveResults()" style="display:none">❌ Archive.org natijalarini yopish</button>
 </body>
 </html>
