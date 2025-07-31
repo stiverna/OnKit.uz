@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kitob Tafsilotlari – OnKit</title>
   <style>
     body {
@@ -13,17 +13,18 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 700px;
       margin: auto;
       background: white;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
     }
 
-    .book-cover {
+    img {
       max-width: 200px;
-      height: auto;
+      border-radius: 8px;
       margin-bottom: 20px;
     }
 
@@ -36,39 +37,35 @@
       margin-bottom: 10px;
     }
 
-    .back {
+    .btn {
       display: inline-block;
-      margin-top: 20px;
-      background: #3498db;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
+      margin: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
       text-decoration: none;
+      border-radius: 6px;
+      color: white;
     }
 
-    .download-link {
-      margin-top: 20px;
-      display: inline-block;
+    .back-btn {
+      background: #3498db;
+    }
+
+    .download-btn {
       background: #2ecc71;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img id="cover" class="book-cover" src="" alt="Kitob rasmi">
+    <img id="cover" src="" alt="Kitob rasmi" />
     <h2 id="title">Kitob nomi</h2>
     <p class="info"><strong>Muallif:</strong> <span id="author"></span></p>
     <p class="info"><strong>Nashr yili:</strong> <span id="year"></span></p>
-    <p class="info" id="description"><em>📄 Tavsif yuklanmoqda...</em></p>
 
-    <a class="download-link" id="downloadLink" href="#" target="_blank">📄 Yuklab olish</a>
+    <a href="#" id="downloadLink" class="btn download-btn" download>📄 PDF Yuklab olish</a>
     <br>
-    <a href="search.html" class="back">⬅️ Ortga qaytish</a>
+    <a href="search.html" class="btn back-btn">⬅️ Bosh sahifaga qaytish</a>
   </div>
 
   <script>
@@ -77,8 +74,7 @@
     const author = params.get("author") || "Noma'lum";
     const year = params.get("year") || "Noma'lum";
     const coverId = params.get("cover");
-    const olid = params.get("olid");
-    const pdfLink = params.get("pdf");
+    const pdfUrl = params.get("pdf"); // PDF havolasi (to‘g‘ridan-to‘g‘ri yuklab olish uchun)
 
     document.getElementById("title").textContent = title;
     document.getElementById("author").textContent = author;
@@ -89,38 +85,13 @@
       : "https://via.placeholder.com/200x250?text=No+Cover";
     document.getElementById("cover").src = cover;
 
-    // PDF yoki OpenLibrary sahifasi
-    const downloadBtn = document.getElementById("downloadLink");
-    if (pdfLink) {
-      downloadBtn.href = decodeURIComponent(pdfLink);
-      downloadBtn.textContent = "⬇️ PDF ni yuklab olish";
-    } else if (olid) {
-      downloadBtn.href = `https://openlibrary.org/books/${olid}`;
-      downloadBtn.textContent = "📄 OpenLibrary sahifasiga o'tish";
+    // PDF havolasi to'g'ridan-to'g'ri yuklash uchun
+    const downloadLink = document.getElementById("downloadLink");
+    if (pdfUrl) {
+      downloadLink.href = decodeURIComponent(pdfUrl);
     } else {
-      downloadBtn.href = "https://openlibrary.org/";
-      downloadBtn.textContent = "🔗 Bosh sahifaga o'tish";
-    }
-
-    // Tavsifni yuklash
-    if (olid) {
-      fetch(`https://openlibrary.org/books/${olid}.json`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.description) {
-            const desc = typeof data.description === "string"
-              ? data.description
-              : data.description.value;
-            document.getElementById("description").textContent = desc;
-          } else {
-            document.getElementById("description").textContent = "❕ Tavsif mavjud emas.";
-          }
-        })
-        .catch(() => {
-          document.getElementById("description").textContent = "❌ Tavsif yuklashda xatolik yuz berdi.";
-        });
-    } else {
-      document.getElementById("description").textContent = "❕ Tavsif mavjud emas.";
+      downloadLink.href = "#";
+      downloadLink.style.display = "none"; // Agar yo‘q bo‘lsa tugmani yashir
     }
   </script>
 </body>
