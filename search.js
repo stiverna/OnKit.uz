@@ -1,7 +1,7 @@
+// OpenLibrary orqali qidiruv
 function searchBooks() {
   const query = document.getElementById("searchInput").value.trim();
   const resultsDiv = document.getElementById("results");
-  const downloadBtn = document.getElementById("downloadBtn");
   const closeResultsBtn = document.getElementById("closeResultsBtn");
 
   if (!query) {
@@ -9,10 +9,8 @@ function searchBooks() {
     return;
   }
 
-  resultsDiv.innerHTML = "⏳ Qidirilmoqda...";
-  downloadBtn.style.display = "none";
+  resultsDiv.innerHTML = "⏳ OpenLibrary orqali qidirilmoqda...";
   closeResultsBtn.style.display = "none";
-  document.getElementById("archiveSection").style.display = "none";
 
   fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
@@ -22,7 +20,7 @@ function searchBooks() {
         return;
       }
 
-      resultsDiv.innerHTML = "";
+      resultsDiv.innerHTML = "<h3>📚 OpenLibrary natijalari</h3>";
       closeResultsBtn.style.display = "block";
 
       data.docs.slice(0, 10).forEach((book) => {
@@ -37,18 +35,12 @@ function searchBooks() {
 
         const card = document.createElement("div");
         card.className = "book-card";
-
         card.innerHTML = `
           <img src="${coverUrl}" alt="Kitob rasmi">
           <h4>${title}</h4>
           <p>${author}</p>
+          <a class="download-link" href="https://openlibrary.org/books/${olid}" target="_blank">🡇 Yuklab olish</a>
         `;
-
-        // Kitob sahifasiga o'tish
-        card.onclick = function () {
-          const url = `book.html?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&year=${encodeURIComponent(year)}&cover=${coverId}&olid=${olid}`;
-          window.location.href = url;
-        };
 
         resultsDiv.appendChild(card);
       });
@@ -58,28 +50,78 @@ function searchBooks() {
     });
 }
 
-function closeOpenLibraryResults() {
-  document.getElementById("results").innerHTML = "";
-  document.getElementById("downloadBtn").style.display = "none";
-  document.getElementById("closeResultsBtn").style.display = "none";
-}
-
-function searchInArchive() {
+// Archive.org orqali qidiruv
+function searchArchiveBooks() {
   const query = document.getElementById("searchInput").value.trim();
+  const archiveDiv = document.getElementById("archiveResults");
+  const closeArchiveBtn = document.getElementById("closeArchiveBtn");
+
   if (!query) {
     alert("Iltimos, kitob nomini yozing.");
     return;
   }
 
-  const archiveFrame = document.getElementById("archiveFrame");
-  const archiveSection = document.getElementById("archiveSection");
+  archiveDiv.innerHTML = "⏳ Archive.org orqali qidirilmoqda...";
+  closeArchiveBtn.style.display = "none";
 
-  archiveFrame.src = `https://archive.org/details/texts?query=${encodeURIComponent(query)}`;
-  archiveSection.style.display = "block";
-  archiveFrame.scrollIntoView({ behavior: "smooth" });
+  fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(query)}&fl[]=identifier,title,creator&output=json`)
+    .then(res => res.json())
+    .then(async data => {
+      const docs = data.response.docs;
+      if (!docs || docs.length === 0) {
+        archiveDiv.innerHTML = "❌ Hech qanday natija topilmadi.";
+        return;
+      }
+
+      archiveDiv.innerHTML = "<h3>📚 Archive.org natijalari</h3>";
+      closeArchiveBtn.style.display = "block";
+
+      for (let doc of docs.slice(0, 10)) {
+        const id = doc.identifier;
+        const title = doc.title || "Nomsiz";
+        const author = doc.creator || "Muallif yo‘q";
+        const pdfUrl = `https://archive.org/download/${id}/${id}.pdf`;
+
+        // PDF mavjudligini tekshiramiz
+        const exists = await checkIfPDFExists(pdfUrl);
+        if (!exists) continue;
+
+        const card = document.createElement("div");
+        card.className = "book-card";
+        card.innerHTML = `
+          <h4>${title}</h4>
+          <p>${author}</p>
+          <a class="download-link" href="${pdfUrl}" target="_blank">🡇 PDF Yuklab olish</a>
+        `;
+        archiveDiv.appendChild(card);
+      }
+
+      if (archiveDiv.innerHTML.trim() === "<h3>📚 Archive.org natijalari</h3>") {
+        archiveDiv.innerHTML += "<p>❌ PDF faylli natijalar topilmadi.</p>";
+      }
+    })
+    .catch(() => {
+      archiveDiv.innerHTML = "❌ Archive qidiruvda xatolik yuz berdi.";
+    });
 }
 
-function closeArchive() {
-  document.getElementById("archiveFrame").src = "";
-  document.getElementById("archiveSection").style.display = "none";
+// PDF mavjudligini HEAD orqali tekshirish
+async function checkIfPDFExists(url) {
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+// Yopish tugmalari
+function closeOpenLibraryResults() {
+  document.getElementById("results").innerHTML = "";
+  document.getElementById("closeResultsBtn").style.display = "none";
+}
+
+function closeArchiveResults() {
+  document.getElementById("archiveResults").innerHTML = "";
+  document.getElementById("closeArchiveBtn").style.display = "none";
 }
