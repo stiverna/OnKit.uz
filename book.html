@@ -64,7 +64,9 @@
     <h2 id="title">Kitob nomi</h2>
     <p class="info"><strong>Muallif:</strong> <span id="author"></span></p>
     <p class="info"><strong>Nashr yili:</strong> <span id="year"></span></p>
-    <a class="download-link" id="downloadLink" href="#" target="_blank">📄 Yuklab olish (OpenLibrary)</a>
+    <p class="info" id="description"><em>📄 Tavsif yuklanmoqda...</em></p>
+
+    <a class="download-link" id="downloadLink" href="#" target="_blank">📄 Yuklab olish</a>
     <br>
     <a href="search.html" class="back">⬅️ Ortga qaytish</a>
   </div>
@@ -76,6 +78,7 @@
     const year = params.get("year") || "Noma'lum";
     const coverId = params.get("cover");
     const olid = params.get("olid");
+    const pdfLink = params.get("pdf");
 
     document.getElementById("title").textContent = title;
     document.getElementById("author").textContent = author;
@@ -86,10 +89,39 @@
       : "https://via.placeholder.com/200x250?text=No+Cover";
     document.getElementById("cover").src = cover;
 
-    const downloadLink = olid
-      ? `https://openlibrary.org/books/${olid}`
-      : "https://openlibrary.org/";
-    document.getElementById("downloadLink").href = downloadLink;
+    // PDF yoki OpenLibrary sahifasi
+    const downloadBtn = document.getElementById("downloadLink");
+    if (pdfLink) {
+      downloadBtn.href = decodeURIComponent(pdfLink);
+      downloadBtn.textContent = "⬇️ PDF ni yuklab olish";
+    } else if (olid) {
+      downloadBtn.href = `https://openlibrary.org/books/${olid}`;
+      downloadBtn.textContent = "📄 OpenLibrary sahifasiga o'tish";
+    } else {
+      downloadBtn.href = "https://openlibrary.org/";
+      downloadBtn.textContent = "🔗 Bosh sahifaga o'tish";
+    }
+
+    // Tavsifni yuklash
+    if (olid) {
+      fetch(`https://openlibrary.org/books/${olid}.json`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.description) {
+            const desc = typeof data.description === "string"
+              ? data.description
+              : data.description.value;
+            document.getElementById("description").textContent = desc;
+          } else {
+            document.getElementById("description").textContent = "❕ Tavsif mavjud emas.";
+          }
+        })
+        .catch(() => {
+          document.getElementById("description").textContent = "❌ Tavsif yuklashda xatolik yuz berdi.";
+        });
+    } else {
+      document.getElementById("description").textContent = "❕ Tavsif mavjud emas.";
+    }
   </script>
 </body>
 </html>
