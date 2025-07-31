@@ -1,4 +1,3 @@
-// OpenLibrary orqali qidiruv
 function searchBooks() {
   const query = document.getElementById("searchInput").value.trim();
   const resultsDiv = document.getElementById("results");
@@ -9,8 +8,9 @@ function searchBooks() {
     return;
   }
 
-  resultsDiv.innerHTML = "⏳ OpenLibrary orqali qidirilmoqda...";
+  resultsDiv.innerHTML = "⏳ Qidirilmoqda...";
   closeResultsBtn.style.display = "none";
+  document.getElementById("archiveSection").style.display = "none";
 
   fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
@@ -20,13 +20,13 @@ function searchBooks() {
         return;
       }
 
-      resultsDiv.innerHTML = "<h3>📚 OpenLibrary natijalari</h3>";
+      resultsDiv.innerHTML = "";
       closeResultsBtn.style.display = "block";
 
       data.docs.slice(0, 10).forEach((book) => {
         const title = book.title || "Nomsiz";
         const author = book.author_name ? book.author_name.join(", ") : "Muallif yo‘q";
-        const year = book.first_publish_year || "";
+        const year = book.first_publish_year || "Noma’lum";
         const olid = book.edition_key ? book.edition_key[0] : "";
         const coverId = book.cover_i;
         const coverUrl = coverId
@@ -35,12 +35,18 @@ function searchBooks() {
 
         const card = document.createElement("div");
         card.className = "book-card";
+
         card.innerHTML = `
           <img src="${coverUrl}" alt="Kitob rasmi">
           <h4>${title}</h4>
           <p>${author}</p>
-          <a class="download-link" href="https://openlibrary.org/books/${olid}" target="_blank">🡇 Yuklab olish</a>
         `;
+
+        // Kitob sahifasiga o'tish
+        card.onclick = function () {
+          const url = `book.html?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&year=${encodeURIComponent(year)}&cover=${coverId}&olid=${olid}`;
+          window.location.href = url;
+        };
 
         resultsDiv.appendChild(card);
       });
@@ -50,78 +56,28 @@ function searchBooks() {
     });
 }
 
-// Archive.org orqali qidiruv
-function searchArchiveBooks() {
-  const query = document.getElementById("searchInput").value.trim();
-  const archiveDiv = document.getElementById("archiveResults");
-  const closeArchiveBtn = document.getElementById("closeArchiveBtn");
-
-  if (!query) {
-    alert("Iltimos, kitob nomini yozing.");
-    return;
-  }
-
-  archiveDiv.innerHTML = "⏳ Archive.org orqali qidirilmoqda...";
-  closeArchiveBtn.style.display = "none";
-
-  fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(query)}&fl[]=identifier,title,creator&output=json`)
-    .then(res => res.json())
-    .then(async data => {
-      const docs = data.response.docs;
-      if (!docs || docs.length === 0) {
-        archiveDiv.innerHTML = "❌ Hech qanday natija topilmadi.";
-        return;
-      }
-
-      archiveDiv.innerHTML = "<h3>📚 Archive.org natijalari</h3>";
-      closeArchiveBtn.style.display = "block";
-
-      for (let doc of docs.slice(0, 10)) {
-        const id = doc.identifier;
-        const title = doc.title || "Nomsiz";
-        const author = doc.creator || "Muallif yo‘q";
-        const pdfUrl = `https://archive.org/download/${id}/${id}.pdf`;
-
-        // PDF mavjudligini tekshiramiz
-        const exists = await checkIfPDFExists(pdfUrl);
-        if (!exists) continue;
-
-        const card = document.createElement("div");
-        card.className = "book-card";
-        card.innerHTML = `
-          <h4>${title}</h4>
-          <p>${author}</p>
-          <a class="download-link" href="${pdfUrl}" target="_blank">🡇 PDF Yuklab olish</a>
-        `;
-        archiveDiv.appendChild(card);
-      }
-
-      if (archiveDiv.innerHTML.trim() === "<h3>📚 Archive.org natijalari</h3>") {
-        archiveDiv.innerHTML += "<p>❌ PDF faylli natijalar topilmadi.</p>";
-      }
-    })
-    .catch(() => {
-      archiveDiv.innerHTML = "❌ Archive qidiruvda xatolik yuz berdi.";
-    });
-}
-
-// PDF mavjudligini HEAD orqali tekshirish
-async function checkIfPDFExists(url) {
-  try {
-    const res = await fetch(url, { method: "HEAD" });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-// Yopish tugmalari
 function closeOpenLibraryResults() {
   document.getElementById("results").innerHTML = "";
   document.getElementById("closeResultsBtn").style.display = "none";
 }
 
-function closeArchiveResults() {
-  document.getElementById("archiveResults").innerHTML = "";
-  document.getElementById("closeArchiveBtn").style.display = "none";
+// Archive.org orqali qidiruv (iframe bilan)
+function searchInArchive() {
+  const query = document.getElementById("searchInput").value.trim();
+  if (!query) {
+    alert("Iltimos, kitob nomini yozing.");
+    return;
+  }
+
+  const archiveFrame = document.getElementById("archiveFrame");
+  const archiveSection = document.getElementById("archiveSection");
+
+  archiveFrame.src = `https://archive.org/details/texts?query=${encodeURIComponent(query)}`;
+  archiveSection.style.display = "block";
+  archiveFrame.scrollIntoView({ behavior: "smooth" });
+}
+
+function closeArchive() {
+  document.getElementById("archiveFrame").src = "";
+  document.getElementById("archiveSection").style.display = "none";
 }
