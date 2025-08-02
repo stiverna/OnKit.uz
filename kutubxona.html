@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>OnKit Kutubxonasi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>📚 Foydalanuvchilar Yuklagan Kitoblar</h2>
+    <div id="bookList"></div>
+    <p><a href="upload.html">⬅️ Kitob yuklash sahifasiga qaytish</a></p>
+  </div>
+
+  <script>
+    fetch('data.json')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('bookList');
+        if (data.length === 0) {
+          list.innerHTML = "<p>Hozircha hech qanday kitob yuklanmagan.</p>";
+        } else {
+          data.reverse().forEach(book => {
+            const el = document.createElement('div');
+            el.className = "book-entry";
+            el.innerHTML = `
+              <h4>${book.title}</h4>
+              <p><em>${book.author}</em></p>
+              <a href="${book.file}" target="_blank">📄 Yuklab olish</a>
+              <hr>
+            `;
+            list.appendChild(el);
+          });
+        }
+      })
+      .catch(err => {
+        document.getElementById('bookList').innerHTML = "<p>Xatolik: ma’lumotlarni o‘qib bo‘lmadi.</p>";
+      });
+  </script>
+</body>
+</html>
